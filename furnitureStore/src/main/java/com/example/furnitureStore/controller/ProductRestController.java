@@ -58,13 +58,13 @@ public class ProductRestController {
 		return ResponseEntity.accepted().headers(headers).body(productService.findAll());
 	}
 	
-	@GetMapping("/getProductsLocation")
-	public ResponseEntity<Object> getAllProductLocation() {
+	@GetMapping("/getProducts/{location}")
+	public ResponseEntity<Iterable<Product>> getAllProductLocation(@PathVariable String location) {
 		var headers = new HttpHeaders();
 		headers.add("ResponseGet", "findAll products executed");
 		headers.add("version", "1.0 Api Rest Product Object");
 		
-		return ResponseEntity.accepted().headers(headers).body(productService.findProductLocation());
+		return ResponseEntity.accepted().headers(headers).body(productService.findProductLocation(location));
 	}
 	
 	@GetMapping("/getProductImage")

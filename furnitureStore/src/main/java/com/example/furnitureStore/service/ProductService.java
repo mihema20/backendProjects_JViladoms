@@ -110,9 +110,9 @@ public class ProductService {
 		return productRepository.findById(productId);
 	}
 
-	public Object findProductLocation() {
+	public Iterable<Product> findProductLocation(String location) {
 		
-		return productRepository.findProductLocation("bano");
+		return productRepository.findProductLocation(location);
 	}
 
 	
