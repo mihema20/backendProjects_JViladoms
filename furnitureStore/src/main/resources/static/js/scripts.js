@@ -34,7 +34,6 @@ var btnFormCleanFields = document.getElementById("btnFormCleanFields");
 var btnFormDelete = document.getElementById("btnFormDelete");
 
 /*SHOW PRODUCTS*/
-
 fetch("http://localhost:8080/apiFurnitureStore/getProducts")
 	.then(response => response.json())
 	.then(datos => {
@@ -45,6 +44,20 @@ fetch("http://localhost:8080/apiFurnitureStore/getProducts")
 			document.getElementById("bodyTableProduct").append(newRowProduct);
 		}
 	});
+	
+window.addEventListener("change",function(){
+	fetch("http://localhost:8080/apiFurnitureStore/getProducts")
+	.then(response => response.json())
+	.then(datos => {
+		
+		for (let producto of datos) {
+			
+			newRowProduct = createRow(producto.productId, producto.title, producto.location, producto.description, producto.price, producto.image);
+			document.getElementById("bodyTableProduct").append(newRowProduct);
+		}
+	});
+})
+
 
 /*FIND PRODUCT BY ID*/
 
@@ -129,6 +142,8 @@ btnFormCleanFields.addEventListener("click", function () {
 	formProductDescription.placeholder = "";
 	formProductPrice.placeholder = "";
 })
+
+/*CREATE ROW PRODUCT TABLE */
 
 function createRow(productId, title,  location, description, price, image) {
 	let trProduct = document.createElement("tr");

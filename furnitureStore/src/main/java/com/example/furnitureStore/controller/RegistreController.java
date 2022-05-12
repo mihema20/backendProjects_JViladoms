@@ -1,6 +1,7 @@
 package com.example.furnitureStore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,10 +28,10 @@ public class RegistreController {
 	@PostMapping("/addCustomer")
 	public String  createCount(@ModelAttribute("customer") Customer customer){
 		Customer newCustomer = customer;
-		//BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		//newCustomer.setPassword(encoder.encode(customer.getPassword()));
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		newCustomer.setPassword(encoder.encode(customer.getPassword()));
 		
 		customerRepository.save(newCustomer);
-		return "loginForm";
+		return "login";
 	}
 }
