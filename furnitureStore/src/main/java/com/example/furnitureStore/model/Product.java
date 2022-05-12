@@ -1,12 +1,9 @@
 package com.example.furnitureStore.model;
 
-
-
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 @Document("product")
 public class Product {
 	@Id
@@ -39,7 +36,6 @@ public class Product {
 		this.image = image;
 	}
 	
-	@Id
 	public String getProductId() {
 		return productId;
 	}
@@ -93,6 +89,4 @@ public class Product {
 		return "Product [productId=" + productId + ", location=" + location + ", title=" + title + ", description="
 				+ description + ", price=" + price + ", image=" + image + "]";
 	}
-
-	
 }

@@ -2,17 +2,18 @@ package com.example.furnitureStore.controller;
 
 import java.io.IOException;
 import java.util.Optional;
-
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,17 +29,9 @@ public class ProductRestController {
 	ProductService productService;
 	
 	@PostMapping("/addProduct")
-	public ResponseEntity<Product> createProduct(
-								 @RequestParam String location,
-								 @RequestParam String title,
-								 @RequestParam String description,
-								 @RequestParam double price, @RequestParam MultipartFile file) throws IOException{
-		Product product = new Product();
-		product.setLocation(location);
-		product.setTitle(title);
-		product.setDescription(description);
-		product.setImage( new Binary(file.getBytes() ));
-		product.setPrice(price);
+	public ResponseEntity<Product> createProduct(@RequestBody Product product) throws IOException{
+		
+		System.out.println(product);
 		productService.save(product);
 		
 		var headers = new HttpHeaders();
@@ -49,6 +42,21 @@ public class ProductRestController {
 		return ResponseEntity.accepted().headers(headers).body(product);
 	}
 	
+	@PostMapping("/addProductImage")
+	public ResponseEntity <Product> createProductImages (@RequestParam String id, @RequestParam MultipartFile file) throws IOException  {
+		
+		Optional<Product> imageProduct = productService.findByProductId(id);		
+		imageProduct.get().setImage( new Binary(file.getBytes() ));		
+		productService.save(imageProduct.get()); 
+		
+		var headers = new HttpHeaders();
+		headers.add("ResponseCreate", "save Image Product executed");
+		headers.add("version", "1.0 Api Rest Image Product Object");
+		headers.add("Executed Output", "image Product uploaded");
+		return ResponseEntity.accepted().headers(headers).body(imageProduct.get());
+	}
+	
+	@CrossOrigin
 	@GetMapping("/getProducts")
 	public ResponseEntity<Iterable<Product>> getAllProduct() {
 		var headers = new HttpHeaders();
@@ -58,62 +66,59 @@ public class ProductRestController {
 		return ResponseEntity.accepted().headers(headers).body(productService.findAll());
 	}
 	
-	@GetMapping("/getProductsLocation")
-	public ResponseEntity<Object> getAllProductLocation() {
+	@CrossOrigin
+	@GetMapping("/getProduct")
+	public ResponseEntity<Optional<Product>> getProductByProductId(@RequestParam String productId) {
 		var headers = new HttpHeaders();
 		headers.add("ResponseGet", "findAll products executed");
 		headers.add("version", "1.0 Api Rest Product Object");
 		
-		return ResponseEntity.accepted().headers(headers).body(productService.findProductLocation());
+		return ResponseEntity.accepted().headers(headers).body(productService.findByProductId(productId));
 	}
 	
+	@GetMapping("/getProducts/{location}")
+	public ResponseEntity<Iterable<Product>> getAllProductLocation(@PathVariable String location) {
+		var headers = new HttpHeaders();
+		headers.add("ResponseGet", "findAll products executed");
+		headers.add("version", "1.0 Api Rest Product Object");
+		
+		return ResponseEntity.accepted().headers(headers).body(productService.findProductLocation(location));
+	}
+	@CrossOrigin
 	@GetMapping("/getProductImage")
-	public ResponseEntity<byte[]> getEmployeeImage (@RequestParam String productId) {
+	public ResponseEntity<byte[]> getProductImage (@RequestParam String productId) {
 		
 		Optional<Product> product = productService.findByProductId(productId);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.IMAGE_JPEG);
-		
 		return new ResponseEntity<>( product.get().getImage().getData(), headers, HttpStatus.OK );
 	}
 	
 	@PostMapping("/updateProduct/{productId}")
-	public ResponseEntity<Product> updateProduct (@PathVariable String productId, 
-											   @RequestParam String location,
-											   @RequestParam String title,
-											   @RequestParam String description,
-											   @RequestParam double price, @RequestParam MultipartFile file) throws IOException {
-		
+	public ResponseEntity<Product> updateProduct(@RequestBody Product product) throws IOException{
 		String responseUpdate = "";
-		Optional<Product> productoUpdate = productService.findByProductId(productId);
-		Product productToUpdate =null;
-		
+		Optional<Product> productoUpdate = productService.findByProductId(product.getProductId());
+		Product productToUpdate = null;
+		System.out.println(productoUpdate);
 		if ( productoUpdate.isPresent() ) {
 		
 			productToUpdate = productoUpdate.get();
-			
-			Product productFromRest = new Product();
-			productFromRest.setProductId(productId);
-			productFromRest.setLocation(location);
-			productFromRest.setTitle(title);
-			productFromRest.setDescription(description);
-			productFromRest.setImage(new Binary(file.getBytes()));
-			productFromRest.setPrice(price);
+			Product productFromRest = product;
 			
 			responseUpdate += "product found";
 			boolean updated = false;
 			
-			if  (productFromRest.getLocation() != null) {
+			if  (productFromRest.getLocation() != null && !productFromRest.getLocation().isBlank()) {
 				responseUpdate += " - product location value updated: " + productFromRest.getLocation() +  "( old value: " + productToUpdate.getLocation() + ")" ;
 				productToUpdate.setLocation(productFromRest.getLocation());
 				updated = true;
 			}
-			if  (productFromRest.getTitle() != null) {
+			if  (productFromRest.getTitle() != null && !productFromRest.getTitle().isBlank()) {
 				responseUpdate += " - product title value updated: " + productFromRest.getTitle() +  "( old value: " + productToUpdate.getTitle() + ")" ;
 				productToUpdate.setTitle(productFromRest.getTitle());
 				updated = true;
 			}
-			if  (productFromRest.getDescription() != null) {
+			if  (productFromRest.getDescription() != null && !productFromRest.getDescription().isBlank()) {
 				responseUpdate += " - product description value updated: " + productFromRest.getDescription() +  "( old value: " + productToUpdate.getDescription() + ")" ;
 				productToUpdate.setDescription(productFromRest.getDescription());
 				updated = true;

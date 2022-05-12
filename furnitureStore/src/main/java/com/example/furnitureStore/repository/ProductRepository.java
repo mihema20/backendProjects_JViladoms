@@ -1,7 +1,6 @@
 package com.example.furnitureStore.repository;
 
 import java.util.List;
-
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,5 +14,5 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 	List<Product> findItemByTitle(String title);
 	
 	@Query("{location: ?0 }")
-	List<Product> findProductLocation(String location);
+	Iterable<Product> findProductLocation(String location);
 }
