@@ -42,6 +42,7 @@ package com.example.furnitureStore.controller;
   
   @RequestMapping(value= "/addCustomer", method =RequestMethod.POST) 
   public ResponseEntity<Customer> createCustomer( @RequestBody Customer customer) {
+	  
 	  BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	  System.out.println("customer" + customer); Customer newCustomer = customer;
 	  newCustomer.setPassword(encoder.encode(customer.getPassword())); Customer

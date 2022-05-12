@@ -34,13 +34,6 @@
 	      <scope>test</scope>
 	    </dependency>
 		<!--_____________________-->
-		<!--Dependencie JWTS-->
-		<dependency>
-		    <groupId>io.jsonwebtoken</groupId>
-		    <artifactId>jjwt</artifactId>
-		    <version>0.6.0</version>
-		</dependency>
-		<!--______________________-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

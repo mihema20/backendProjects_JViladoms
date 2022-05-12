@@ -2,14 +2,12 @@ package com.example.furnitureStore.controller;
 
 import java.io.IOException;
 import java.util.Optional;
-
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +28,6 @@ public class ProductRestController {
 	@Autowired
 	ProductService productService;
 	
-	@CrossOrigin
 	@PostMapping("/addProduct")
 	public ResponseEntity<Product> createProduct(@RequestBody Product product) throws IOException{
 		
@@ -69,7 +66,7 @@ public class ProductRestController {
 		return ResponseEntity.accepted().headers(headers).body(productService.findAll());
 	}
 	
-	//@CrossOrigin
+	@CrossOrigin
 	@GetMapping("/getProduct")
 	public ResponseEntity<Optional<Product>> getProductByProductId(@RequestParam String productId) {
 		var headers = new HttpHeaders();
@@ -94,18 +91,11 @@ public class ProductRestController {
 		Optional<Product> product = productService.findByProductId(productId);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.IMAGE_JPEG);
-		
 		return new ResponseEntity<>( product.get().getImage().getData(), headers, HttpStatus.OK );
 	}
 	
 	@PostMapping("/updateProduct/{productId}")
 	public ResponseEntity<Product> updateProduct(@RequestBody Product product) throws IOException{
-	/*public ResponseEntity<Product> updateProduct (@PathVariable String productId, 
-											   @RequestParam String location,
-											   @RequestParam String title,
-											   @RequestParam String description,
-											   @RequestParam double price, @RequestParam MultipartFile file) throws IOException {*/
-		
 		String responseUpdate = "";
 		Optional<Product> productoUpdate = productService.findByProductId(product.getProductId());
 		Product productToUpdate = null;
@@ -114,13 +104,6 @@ public class ProductRestController {
 		
 			productToUpdate = productoUpdate.get();
 			Product productFromRest = product;
-			//Product productFromRest = new Product();
-			//productFromRest.setProductId(productId);
-			//productFromRest.setLocation(location);
-			//productFromRest.setTitle(title);
-			//productFromRest.setDescription(description);
-			//productFromRest.setImage(new Binary(file.getBytes()));
-			//productFromRest.setPrice(price);
 			
 			responseUpdate += "product found";
 			boolean updated = false;

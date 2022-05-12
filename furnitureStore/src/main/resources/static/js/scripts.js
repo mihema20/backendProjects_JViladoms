@@ -44,19 +44,6 @@ fetch("http://localhost:8080/apiFurnitureStore/getProducts")
 			document.getElementById("bodyTableProduct").append(newRowProduct);
 		}
 	});
-	
-window.addEventListener("change",function(){
-	fetch("http://localhost:8080/apiFurnitureStore/getProducts")
-	.then(response => response.json())
-	.then(datos => {
-		
-		for (let producto of datos) {
-			
-			newRowProduct = createRow(producto.productId, producto.title, producto.location, producto.description, producto.price, producto.image);
-			document.getElementById("bodyTableProduct").append(newRowProduct);
-		}
-	});
-})
 
 
 /*FIND PRODUCT BY ID*/

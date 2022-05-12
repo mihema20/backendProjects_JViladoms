@@ -44,52 +44,7 @@ public class ProductService {
 	public void deleteById(String productId) {
 		productRepository.deleteById(productId);
 	}
-
-	public String update(String id, Product furniture) {
-
-		String response = "";
-		Boolean changedValues = false;
-		Optional<Product> furnitureFound = productRepository.findById(id);
-
-		if (furnitureFound.isPresent()) {
-
-			if ((furniture.getTitle() != null) && (furniture.getTitle() != null)) {
-				furnitureFound.get().setTitle(furniture.getTitle());
-				changedValues = true;
-			}
-			/*
-			if ((author.getCountry() != null) && (author.getCountry() != "")) {
-				authorFound.get().setCountry(author.getCountry());
-				changedValues = true;
-			}
-
-			if ((authorFound.get().getDob() != author.getDob()) && author.getDob() != 0) {
-				authorFound.get().setDob(author.getDob());
-				changedValues = true;
-			}
-
-			if ((authorFound.get().getQtyBooks() != author.getQtyBooks()) && (author.getQtyBooks() != 0)) {
-				authorFound.get().setQtyBooks(author.getQtyBooks());
-				changedValues = true;
-			}
-
-			if ((authorFound.get().getAlive() != author.getAlive()) && (author.getAlive() != null)) {
-				authorFound.get().setAlive(author.getAlive());
-				changedValues = true;
-			}*/
-
-			if (changedValues == true) {
-				productRepository.save(furnitureFound.get());
-			} else
-				response += "There are no fields to update";
-
-		} else
-			response += "Furniture not found";
-
-		return response;
-
-	}
-
+	
 	// other options
 	public long count() {
 		long quantity = productRepository.count();
